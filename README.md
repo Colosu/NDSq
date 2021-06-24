@@ -1,2 +1,2 @@
 # NDSq
-Code and experiments for paper Squeeziness for Non-Deterministic Systems
+Code and results from paper Squeeziness for Non-Deterministic Systems
