@@ -14,11 +14,13 @@ from fileinput import FileInput
 
 path = "Dot"
 repeat = True
+i = 0
 
 for filename in os.listdir(path):
 	if filename[-4:] == ".dot":
+		i = 0
 		repeat = True
-		while repeat:	
+		while repeat and i < 10000:	
 			repeat = False
 			file = FileInput(path+"/"+filename, inplace=1)
 			for line in file:
@@ -28,5 +30,6 @@ for filename in os.listdir(path):
 					lineW2 = line[:pos] + "1" + line[pos+1:]
 					line = lineW1 + lineW2
 					repeat = True
+					i = i + 1
 				print(line, end='')
 			file.close()

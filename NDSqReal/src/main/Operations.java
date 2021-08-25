@@ -23,7 +23,13 @@ public class Operations {
 		double TPDiff = 0;
 		double TNDSqI = 0;
 		double TNDSqO = 0;
+    	double startTime;
+    	double endTime;
+    	double SqTime;
+    	double OpSqTime;
+    	double ExpTime;
 
+		startTime = System.nanoTime() /(double)1000000000;
 		CompactMealy<String, String> fsm = g.getMachine();
 		int qid = fsm.getInitialState();
 		FSMExplorer[] explorer = new FSMExplorer[fsm.getInputAlphabet().size()];
@@ -52,6 +58,8 @@ public class Operations {
 //				outputs += explorer[j].getOuputs();
 //			}
 //		}
+		endTime = System.nanoTime() /(double)1000000000;
+		ExpTime = endTime - startTime;
 		
 		inputs = mapItoO.keySet().size();
 		outputs = mapOtoI.keySet().size();
@@ -61,6 +69,7 @@ public class Operations {
 //		double max = 0.0;
 		HashSet<String> lis;
 		int val = 0;
+		startTime = System.nanoTime() /(double)1000000000;
 		for (Iterator<HashSet<String>> it = mapOtoI.values().iterator(); it.hasNext(); ) {
 			lis = it.next();
 			val = lis.size();
@@ -70,7 +79,10 @@ public class Operations {
 		}
 		TPColl = TPColl/((double)(inputs) * (inputs - 1));
 		TNDSqI = TNDSqI/((double)inputs);
+		endTime = System.nanoTime() /(double)1000000000;
+		SqTime = endTime - startTime;
 		val = 0;
+		startTime = System.nanoTime() /(double)1000000000;
 		for (Iterator<HashSet<String>> it = mapItoO.values().iterator(); it.hasNext(); ) {
 			lis = it.next();
 			val = lis.size();
@@ -80,10 +92,14 @@ public class Operations {
 		}
 		TPDiff = TPDiff/((double)(outputs) * (outputs - 1));
 		TNDSqO = TNDSqO/((double)outputs);
+		endTime = System.nanoTime() /(double)1000000000;
+		OpSqTime = endTime - startTime;
 
 		vals.setPColl(TPColl + TPDiff);
-
 		vals.setNDSq(TNDSqI + TNDSqO);
+		vals.setSqTime(SqTime);
+		vals.setOpSqTime(OpSqTime);
+		vals.setExpTime(ExpTime);
 //		vals.setSq10(log2(max));
 		
 		return;

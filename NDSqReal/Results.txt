@@ -1,0 +1,3 @@
+| Pearson correlation | Spearman correlation | NDSq Time | Sq Time | Exploration Time |
+0.9188293990432457 & 0.9441176470588236 & 499.8253911910033 & 499.59771167700274 & 499.5970031809993
+\hline

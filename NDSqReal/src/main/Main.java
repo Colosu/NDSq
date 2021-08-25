@@ -9,9 +9,8 @@ import org.apache.commons.math3.stat.correlation.SpearmansCorrelation;
 
 public class Main {
 	protected static int LEN = 2; //Length of the input sequences
-	protected static int N = 11; //Number of FSMs per block
+	protected static int N = 16; //Number of FSMs per block
 	protected static int EXP = 1; //Number of blocks
-	protected static int ND = 3; //Number of 
 
 	public static void main(String[] args) {
 
@@ -22,12 +21,10 @@ public class Main {
 		//File names.
 		String Ifile = "binary.fst";
 		String Ofile = "PearsonResults.txt";
-		String Ofile2 = "SpearmanResults.txt";
 
 		//File variables
 		File folder;
 		FileWriter OFile;
-		FileWriter OFile2;
 
 
 		//Needed variables
@@ -35,24 +32,22 @@ public class Main {
 		Vals vals = new Vals();
 		double[] FEP = new double[N];
 		double[] NDSq = new double[N];
+    	double SqTime = 0.0;
+    	double OpSqTime = 0.0;
+    	double ExpTime = 0.0;
+		
 		double Ps = 0.0;
 		double Ss = 0.0;
-//		double MeanPs = 0.0;
-//		double MeanSs = 0.0;
 		
 		for (int K = 1; K <= 1; K++) {
 			//Initialization of output file names
 			//Open output files
 			//Write head of output files
 			try {
-				Ofile = "Pearson.txt";
+				Ofile = "Results.txt";
 				OFile = new FileWriter(Ofile, false);
-//				OFile.write("| #Test | Pearson correlation Sq1 | Pearson correlation Sq2 | Pearson correlation Sq3 | Pearson correlation Sq4 | Pearson correlation Sq5 | Pearson correlation Sq6 | Pearson correlation Sq7 | Pearson correlation Sq8 | Pearson correlation Sq9 | Pearson correlation Sq10 |\n");
-//				OFile.flush();
-				Ofile2 = "Spearman.txt";
-				OFile2 = new FileWriter(Ofile2, false);
-//				OFile2.write("| #Test | Spearman correlation Sq1 | Spearman correlation Sq2 | Spearman correlation Sq3 | Spearman correlation Sq4 | Spearman correlation Sq5 | Spearman correlation Sq6 | Spearman correlation Sq7 | Spearman correlation Sq8 | Spearman correlation Sq9 | Spearman correlation Sq10 |\n");
-//				OFile2.flush();
+				OFile.write("| Pearson correlation | Spearman correlation | NDSq Time | Sq Time | Exploration Time |\n");
+				OFile.flush();
 			} catch (IOException e) {
 				e.printStackTrace();
 				return;
@@ -61,8 +56,6 @@ public class Main {
 			//Main loop
 			//INI = first test block
 			//EX = number of test blocks to test
-//			MeanPs = 0.0;
-//			MeanSs = 0.0;
 			for (int J = 0; J < EXP; J++) {
 
 				//Initialize arrays to 0
@@ -88,7 +81,6 @@ public class Main {
 						//Close output files
 						try {
 							OFile.close();
-							OFile2.close();
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
@@ -100,6 +92,9 @@ public class Main {
 						Ops.SqueezinessAndPColl(G, LEN, vals);
 						FEP[I] = vals.getPColl();
 						NDSq[I] = vals.getNDSq();
+						SqTime += vals.getSqTime();
+						OpSqTime += vals.getOpSqTime();
+						ExpTime += vals.getExpTime();
 						//Test control (in order to know where we are during computation)
 						System.out.println("FSM " + String.valueOf(I+1) + "\n");
 						System.out.flush();
@@ -122,32 +117,20 @@ public class Main {
 
 				//Write final results
 				try {
-					OFile.write(String.valueOf(Ps) + "\n");
-//						OFile.write("\\hline\n");
+					OFile.write(String.valueOf(Ps) + " & " + String.valueOf(Ss) + " & " + String.valueOf(ExpTime+SqTime+OpSqTime) + " & " + String.valueOf(ExpTime+SqTime) + " & " + String.valueOf(ExpTime) + "\n");
+					OFile.write("\\hline\n");
 					OFile.flush();
-					OFile2.write(String.valueOf(Ss) + "\n");
-//						OFile2.write("\\hline\n");
-					OFile2.flush();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 				
-//				MeanPs += Ps;
-//				MeanSs += Ss;
 			}
 
 			//Write final means
 			try {
-//				OFile.write("mean & " + String.valueOf(MeanPs/EXP) + " \\\\\n");
-//				OFile.write("\\hline\n");
-//				OFile.flush();
-//				OFile2.write("mean & " + String.valueOf(MeanSs/EXP) + " \\\\\n");
-//				OFile2.write("\\hline\n");
-//				OFile2.flush();
 
 				//Close output files
 				OFile.close();
-				OFile2.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
